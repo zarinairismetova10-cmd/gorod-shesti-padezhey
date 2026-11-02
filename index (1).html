@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Город шести падежей — игра для 5 класса</title>
+<style>
+:root{--ink:#24304b;--muted:#68738a;--paper:#fff;--line:#e3e8f1;--blue:#347edb;--green:#23976b;--gold:#f4bd4d}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:linear-gradient(145deg,#e8f5ff,#f7efff 55%,#fff5e6);min-height:100vh;padding:20px}
+.wrap{max-width:980px;margin:auto}.hero{border-radius:25px;padding:25px;color:#fff;background:linear-gradient(120deg,#3b9bdc,#7165d8 60%,#e58cb8);box-shadow:0 14px 35px #5369a533}.eyebrow{font-size:12px;font-weight:800;letter-spacing:2px;opacity:.9}.hero h1{font-size:clamp(28px,5vw,44px);margin:8px 0}.hero p{margin:0;max-width:650px}.stats{display:flex;gap:18px;flex-wrap:wrap;margin-top:18px;font-weight:800}.card{background:#ffffffed;border:1px solid #e6eaf2;border-radius:20px;padding:18px;margin-top:16px;box-shadow:0 8px 24px #4e60900c}.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.muted{color:var(--muted)}.map{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.district{border:2px solid var(--line);background:#fff;border-radius:16px;padding:13px;text-align:left;cursor:pointer;color:var(--ink);transition:.15s}.district:hover:not(:disabled){transform:translateY(-2px);border-color:#91b8ec}.district:disabled{opacity:.48;cursor:not-allowed}.district.active{border-color:var(--gold);box-shadow:0 0 0 3px #f4bd4d33}.emoji{font-size:32px}.dname{font-weight:800;margin:5px 0 2px}.dsub,.dstatus{font-size:12px;color:var(--muted)}.game{border:2px solid #e5eafa}.topline{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.pill{display:inline-block;border-radius:99px;background:#eef3ff;padding:6px 11px;font-size:12px;font-weight:800;color:#445b94}.game h2{margin:15px 0 5px}.scene{text-align:center;font-size:52px;margin:12px}.question{padding:18px;text-align:center;background:#f3f7ff;border:1px dashed #bdcce6;border-radius:15px;font-size:19px;font-weight:800}.answers{display:grid;gap:9px;margin-top:14px}.answer{border:2px solid var(--line);background:#fff;padding:13px 15px;border-radius:13px;text-align:left;font:inherit;font-weight:650;color:var(--ink);cursor:pointer}.answer:hover:not(:disabled){border-color:#8bb4ed;background:#f8fbff}.answer:disabled{cursor:default}.answer.correct{border-color:#2ca475;background:#eaf8f1}.answer.wrong{border-color:#db6868;background:#fff0f0}.feedback{min-height:25px;margin-top:12px;font-weight:650}.progress{height:9px;background:#e7ebf3;border-radius:99px;overflow:hidden;margin-top:13px}.progress>div{height:100%;background:linear-gradient(90deg,#32ae83,#8acb70);width:0;transition:width .25s}.row{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted);margin-top:6px}.btn{border:0;border-radius:13px;background:var(--blue);color:#fff;padding:13px 17px;font-weight:800;font-size:15px;cursor:pointer;width:100%;margin-top:13px}.btn:hover{filter:brightness(1.05)}.btn.secondary{background:#eef2fa;color:#34425f}.btn:focus-visible,.answer:focus-visible,.district:focus-visible{outline:3px solid var(--gold);outline-offset:2px}[hidden]{display:none!important}.cheat{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.cheat div{padding:10px;border-radius:11px;background:#f3f6fc;font-size:14px}.finish{text-align:center;padding:25px}.finish .trophy{font-size:65px}.finish h2{font-size:30px}.note{font-size:13px;color:var(--muted);line-height:1.5;margin-top:12px}
+@media(max-width:600px){body{padding:11px}.hero{padding:20px}.map{grid-template-columns:repeat(2,1fr)}.cheat{grid-template-columns:repeat(2,1fr)}.card{padding:14px}.question{font-size:17px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="hero">
+<div class="eyebrow">ИНТЕРАКТИВНОЕ ПРИКЛЮЧЕНИЕ · РУССКИЙ ЯЗЫК</div>
+<h1>🏙️ Город шести падежей</h1>
+<p>Стань архитектором города! Выполняй задания, открывай новые районы и научись правильно склонять имена существительные.</p>
+<div class="stats"><span>⭐ Баллы: <b id="score">0</b></span><span>🏗️ Районы: <b id="built">0</b>/6</span></div>
+</header>
+
+<section class="card">
+<div class="sectionhead"><b>🗺️ Карта города</b><span class="muted" id="mapHint">Начни с главной площади</span></div>
+<div class="map" id="map">
+<button class="district active" data-d="0"><div class="emoji">🏛️</div><div class="dname">Главная площадь</div><div class="dsub">Именительный падеж</div><div class="dstatus" id="status0">🔓 Открыт</div></button>
+<button class="district" data-d="1" disabled><div class="emoji">🏠</div><div class="dname">Жилой район</div><div class="dsub">Родительный падеж</div><div class="dstatus" id="status1">🔒 Закрыт</div></button>
+<button class="district" data-d="2" disabled><div class="emoji">🏫</div><div class="dname">Школьный район</div><div class="dsub">Дательный падеж</div><div class="dstatus" id="status2">🔒 Закрыт</div></button>
+<button class="district" data-d="3" disabled><div class="emoji">🛍️</div><div class="dname">Торговый район</div><div class="dsub">Винительный падеж</div><div class="dstatus" id="status3">🔒 Закрыт</div></button>
+<button class="district" data-d="4" disabled><div class="emoji">🌳</div><div class="dname">Парк мастеров</div><div class="dsub">Творительный падеж</div><div class="dstatus" id="status4">🔒 Закрыт</div></button>
+<button class="district" data-d="5" disabled><div class="emoji">📚</div><div class="dname">Район знаний</div><div class="dsub">Предложный падеж</div><div class="dstatus" id="status5">🔒 Закрыт</div></button>
+</div>
+</section>
+
+<section class="card game" id="game">
+<div class="topline"><span class="pill" id="level">Уровень 1 · Знакомство</span><b>⭐ <span id="localScore">0</span></b></div>
+<h2 id="title">Добро пожаловать!</h2><p class="muted" id="desc">Пройди шесть районов и построй свой город.</p>
+<div class="scene" id="scene">🏙️</div>
+<div class="question" id="question">Нажми «Начать игру»!</div>
+<div class="answers" id="answers"></div>
+<div class="feedback" id="feedback" aria-live="polite"></div>
+<div class="progress"><div id="bar"></div></div>
+<div class="row"><span id="count">Задание 0 из 3</span><span id="stage">Подготовка</span></div>
+<button class="btn" id="start">🚀 Начать игру</button>
+<button class="btn" id="next" hidden>Следующее задание →</button>
+</section>
+
+<section class="card">
+<b>📖 Шпаргалка архитектора</b><p class="muted" style="margin:5px 0">Вспомни вопросы шести падежей:</p>
+<div class="cheat">
+<div><b>И. п.</b> — кто? что?</div><div><b>Р. п.</b> — кого? чего?</div>
+<div><b>Д. п.</b> — кому? чему?</div><div><b>В. п.</b> — кого? что?</div>
+<div><b>Т. п.</b> — кем? чем?</div><div><b>П. п.</b> — о ком? о чём?</div>
+</div>
+<p class="note">Подсказка: чтобы определить падеж, найди слово, задай к нему вопрос от главного слова и обрати внимание на предлог.</p>
+</section>
+
+<section class="card finish" id="finish" hidden>
+<div class="trophy">🏆</div><h2>Город построен!</h2>
+<p class="muted">Ты прошёл все шесть районов и справился с испытаниями.</p>
+<div style="font-size:34px;font-weight:900;margin:12px" id="finalScore">0 баллов</div>
+<b id="rank"></b><p class="note" id="resultNote"></p>
+<button class="btn" id="restart">🔄 Играть заново</button>
+</section>
+<footer class="note" style="text-align:center;padding:15px">Учебная игра для 5 класса · Тема: «Склонение имён существительных. Падежи»</footer>
+</main>
+<script>
+(()=>{
+const $=id=>document.getElementById(id);
+const districts=[
+{n:"Именительный",short:"И. п.",emoji:"🏛️",title:"Главная площадь",desc:"Познакомься с именительным падежом.",q:[
+["Кто? Что? — вопросы какого падежа?",["Именительного","Родительного","Дательного"],0,"Именительный падеж отвечает на вопросы кто? что?"],
+["Найди существительное в именительном падеже.",["Книга","Книги","Книгой"],0,"Книга — начальная форма, именительный падеж."],
+["В предложении «Девочка читает» какое слово стоит в И. п.?",["Девочка","Читает","Нет ответа"],0,"Девочка — кто? Это именительный падеж."]]},
+{n:"Родительный",short:"Р. п.",emoji:"🏠",title:"Жилой район",desc:"Узнай, чего не хватает в нашем районе.",q:[
+["Кого? Чего? — вопросы какого падежа?",["Родительного","Винительного","Творительного"],0,"Родительный падеж отвечает на вопросы кого? чего?"],
+["Нет (чего?) ...",["Книги","Книгу","Книгой"],0,"Нет книги — родительный падеж."],
+["В предложении «У дома растёт дерево» слово «дома» в каком падеже?",["Родительном","Дательном","Именительном"],0,"У дома — у чего? Родительный падеж."]]},
+{n:"Дательный",short:"Д. п.",emoji:"🏫",title:"Школьный район",desc:"Помоги школьникам правильно обратиться друг к другу.",q:[
+["Кому? Чему? — вопросы какого падежа?",["Дательного","Родительного","Предложного"],0,"Дательный падеж отвечает на вопросы кому? чему?"],
+["Помочь (кому?) ...",["Другу","Друга","Другом"],0,"Помочь другу — дательный падеж."],
+["В предложении «Я подарил маме цветы» слово «маме» в каком падеже?",["Дательном","Винительном","Творительном"],0,"Подарил кому? Маме — дательный падеж."]]},
+{n:"Винительный",short:"В. п.",emoji:"🛍️",title:"Торговый район",desc:"Выбери предметы, которые покупают жители.",q:[
+["Кого? Что? — вопросы какого падежа?",["Винительного","Именительного","Творительного"],0,"Винительный падеж отвечает на вопросы кого? что?"],
+["Читаю (что?) ...",["Книгу","Книги","Книгой"],0,"Читаю что? Книгу — винительный падеж."],
+["В предложении «Мальчик увидел собаку» слово «собаку» в каком падеже?",["Винительном","Родительном","Предложном"],0,"Увидел кого? Собаку — винительный падеж."]]},
+{n:"Творительный",short:"Т. п.",emoji:"🌳",title:"Парк мастеров",desc:"Помоги мастерам подобрать инструменты.",q:[
+["Кем? Чем? — вопросы какого падежа?",["Творительного","Дательного","Родительного"],0,"Творительный падеж отвечает на вопросы кем? чем?"],
+["Рисовать (чем?) ...",["Карандашом","Карандаша","Карандаш"],0,"Рисовать чем? Карандашом — творительный падеж."],
+["В предложении «Мы любуемся цветами» слово «цветами» в каком падеже?",["Творительном","Именительном","Винительном"],0,"Любуемся чем? Цветами — творительный падеж."]]},
+{n:"Предложный",short:"П. п.",emoji:"📚",title:"Район знаний",desc:"Заверши путешествие по городу знаний.",q:[
+["О ком? О чём? — вопросы какого падежа?",["Предложного","Родительного","Дательного"],0,"Предложный падеж отвечает на вопросы о ком? о чём?"],
+["Говорить (о чём?) ...",["О книге","Книгу","Книгой"],0,"Говорить о чём? О книге — предложный падеж."],
+["В предложении «Мы говорили о путешествии» слово «путешествии» в каком падеже?",["Предложном","Дательном","Творительном"],0,"Говорили о чём? О путешествии — предложный падеж."]]}
+];
+const finalQs=[
+["Как называется изменение существительных по падежам и числам?",["Склонение","Спряжение","Словообразование"],0,"Склонение — изменение существительных по падежам и числам."],
+["Выбери правильный порядок падежей.",["И. п. → Р. п. → Д. п. → В. п. → Т. п. → П. п.","И. п. → Д. п. → Р. п. → Т. п. → В. п. → П. п.","Р. п. → И. п. → В. п. → Д. п. → П. п. → Т. п."],0,"Это правильная последовательность шести падежей."],
+["Какой падеж употребляется только с предлогами?",["Предложный","Именительный","Винительный"],0,"Предложный падеж употребляется с предлогами: о, об, в, на и другими."]
+];
+let score=0,built=0,index=0,step=0,questions=[],locked=false,finalMode=false;
+function update(){
+$("score").textContent=score;$("localScore").textContent=score;$("built").textContent=built;
+districts.forEach((d,i)=>{let b=document.querySelector('[data-d="'+i+'"]');b.disabled=i>built;b.classList.toggle("active",i===index);$("status"+i).textContent=i<built?"🏗️ Построен":i===built?"🔓 Открыт":"🔒 Закрыт"});
+$("mapHint").textContent=built===6?"Все районы построены!":"Открыто районов: "+(built+1)+" из 6";
+}
+function begin(i){
+index=i;step=0;finalMode=i===5;questions=districts[i].q.map(x=>x);
+if(finalMode)questions=questions.concat(finalQs);
+$("start").hidden=true;update();render();
+}
+function render(){
+locked=false;let d=districts[index],q=questions[step];
+$("level").textContent="Район "+(index+1)+" · "+d.short;
+$("title").textContent=d.title;$("desc").textContent=d.desc;$("scene").textContent=d.emoji;
+$("question").textContent=q[0];$("answers").innerHTML="";
+q[1].forEach((answer,j)=>{let b=document.createElement("button");b.className="answer";b.textContent=answer;b.addEventListener("click",()=>choose(j,b));$("answers").appendChild(b)});
+$("feedback").textContent="";$("count").textContent="Задание "+(step+1)+" из "+questions.length;$("stage").textContent="Испытание";
+$("bar").style.width=(step/questions.length*100)+"%";$("next").hidden=true;$("start").hidden=true;
+}
+function choose(j,button){
+if(locked)return;locked=true;let q=questions[step],correct=j===q[2];
+if(correct){score+=10;button.classList.add("correct");$("feedback").textContent="✅ Верно! +10 баллов. "+q[3]}
+else{button.classList.add("wrong");$("feedback").textContent="❌ Правильный ответ: "+q[1][q[2]]+". "+q[3]}
+[...$("answers").children].forEach((b,k)=>{b.disabled=true;if(k===q[2])b.classList.add("correct")});
+$("score").textContent=score;$("localScore").textContent=score;$("bar").style.width=((step+1)/questions.length*100)+"%";
+$("next").textContent=step===questions.length-1?"Завершить район 🏗️":"Следующее задание →";$("next").hidden=false;
+}
+function complete(){
+built++;update();$("title").textContent="🎉 Район построен!";$("desc").textContent="Ты успешно прошёл испытания района «"+districts[index].title+"».";
+$("scene").textContent=districts[index].emoji+" 🏗️";$("question").textContent="Ты набрал "+score+" баллов!";$("answers").innerHTML="";
+$("feedback").textContent="Отличная работа! Новый район города открыт.";$("count").textContent="Район завершён";$("stage").textContent="Победа";$("next").hidden=true;
+if(built===6){finish();return}
+$("start").textContent="Открыть следующий район →";$("start").hidden=false;
+}
+function finish(){
+$("game").hidden=true;$("finish").hidden=false;$("finalScore").textContent=score+" баллов";
+$("rank").textContent=score>=150?"🌟 Великий архитектор языка!":score>=100?"🏆 Мастер падежей!":"👏 Молодой знаток русского языка!";
+$("resultNote").textContent="Максимальный результат — 150 баллов. За каждый правильный ответ начисляется 10 баллов.";
+}
+document.querySelectorAll(".district").forEach(b=>b.addEventListener("click",()=>{if(!b.disabled)begin(+b.dataset.d)}));
+$("start").addEventListener("click",()=>{if(built===0)begin(0);else if(built<6)begin(built)});
+$("next").addEventListener("click",()=>{if(step<questions.length-1){step++;render()}else complete()});
+$("restart").addEventListener("click",()=>{
+score=0;built=0;index=0;step=0;$("finish").hidden=true;$("game").hidden=false;
+$("start").textContent="🚀 Начать игру";$("start").hidden=false;$("title").textContent="Добро пожаловать!";
+$("desc").textContent="Пройди шесть районов и построй свой город.";$("scene").textContent="🏙️";
+$("question").textContent="Нажми «Начать игру»!";$("answers").innerHTML="";$("feedback").textContent="";
+$("count").textContent="Задание 0 из 3";$("stage").textContent="Подготовка";$("bar").style.width="0%";update();
+});
+update();
+})();
+</script>
+</body>
+</html>
